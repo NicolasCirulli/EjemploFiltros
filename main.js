@@ -36,7 +36,7 @@ function crearCheckbox( personajes , contenedor ){
 // funcion para crear cards
 
 function crearCard(personaje){
-
+    let name = personaje.name.replace(' ','')
     let div = document.createElement('DIV')
     div.classList = 'card col-3'
     div.innerHTML = `
@@ -44,7 +44,7 @@ function crearCard(personaje){
             <div class="card-body">
                <h5 class="card-title">${personaje.name}</h5>
                <h4 class="card-title">${personaje.house}</h4>
-                <a href="#" class="btn btn-primary">Ver mas...</a>
+                <a href="./details.html?personaje=${name}" class="btn btn-primary">Ver mas...</a>
             </div>
     `
     return div

@@ -4,6 +4,7 @@ const $search = document.getElementById('search')
 const $checkboxs = document.getElementById('checkboxs')
 const $contPersonajes = document.getElementById('cont-personajes')
 let personajes;
+let favoritos = JSON.parse( localStorage.getItem('favoritos') ) || []
 fetch('https://hp-api.herokuapp.com/api/characters/students')
     .then( data => data.json() )
     .then( res => {
@@ -37,6 +38,15 @@ function crearCheckbox( personajes , contenedor ){
 
 function crearCard(personaje){
     let name = personaje.name.replace(' ','')
+    let clases;
+    let texto;
+    if(favoritos.includes(name)){
+        clases = "btn btn-danger"
+        texto = 'Sacar fav'
+    }else{
+        clases = "btn btn-primary"
+        texto = 'Agregar fav'
+    }
     let div = document.createElement('DIV')
     div.classList = 'card col-3'
     div.innerHTML = `
@@ -45,6 +55,7 @@ function crearCard(personaje){
                <h5 class="card-title">${personaje.name}</h5>
                <h4 class="card-title">${personaje.house}</h4>
                 <a href="./details.html?personaje=${name}" class="btn btn-primary">Ver mas...</a>
+                <button class="${clases}" id="btn-${name}" onclick="handleFavs('${name}', 'btn-${name}' )">${texto}</button>
             </div>
     `
     return div
@@ -71,4 +82,25 @@ function filtrar(){
    let filtradosPorCasa = personajes.filter( personaje => checked.includes( personaje.house ))
    let filtradosPorSearch = filtradosPorCasa.filter( personaje => personaje.name.toLowerCase().includes( $search.value.toLowerCase() ) )
    imprimirCards(filtradosPorSearch, $contPersonajes)
+}
+
+function handleFavs(nombre,id){
+
+    let $btn = document.getElementById(id)
+    if( favoritos.includes(nombre) ){
+        // Acá lo saco de favoritos
+        favoritos = favoritos.filter( personaje => personaje !== nombre )
+        $btn.classList.remove('btn-danger')
+        $btn.classList.add('btn-primary')
+        $btn.textContent = 'Agregar fav'
+        localStorage.setItem( 'favoritos', JSON.stringify(favoritos) )
+    }else{
+        // Acá lo agrego a favoritos
+        favoritos.push(nombre)
+        $btn.classList.remove('btn-primary')
+        $btn.classList.add('btn-danger')
+        $btn.textContent = 'Sacar fav'
+        localStorage.setItem( 'favoritos', JSON.stringify(favoritos) )
+        
+    }
 }

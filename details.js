@@ -10,11 +10,10 @@ fetch('https://hp-api.herokuapp.com/api/characters/students')
     .then( data => data.json() )
     .then( res => {
         personaje = res.find( personaje => personaje.name.replace(' ','') === personajeParam)
-        console.log(personaje)
         $titulo.textContent = personaje.name
         document.title = ` Detalle ${personaje.name} `
         $imgCard.setAttribute('src', personaje.image)
-        $listCard.appendChild(crearCardDetails(personaje))
+        $listCard.appendChild( crearCardDetails(personaje) )
     } )
     .catch( err => console.log(err))
 
